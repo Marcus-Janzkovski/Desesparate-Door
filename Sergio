@@ -1,0 +1,53 @@
+import random
+import matplotlib.pyplot as plt
+
+mantem, troca, jogadas = 0, 0, 10000
+lista_mantem = []
+lista_troca = []
+lista_i = []
+
+for i in range(jogadas): #controla a quantidade de vezes jogadas por simulacao
+   portas = [0, 0, 1]
+   random.shuffle(portas) # embaralha o que tem atras da porta, mudando de lugar o premio
+   print("A ordem das portas eh", portas)
+   escolha_participante = random.randrange(3)  # o participante escolhe uma das tres portas [0,1,2]
+   print("O participante escolheu a porta", escolha_participante, "que possui o valor", portas[escolha_participante])
+   escolha_inicial = portas[escolha_participante]
+
+   #o apresentador escolhe uma das portas que o participante nao escolheu e que contem 0 e abre
+   del(portas[escolha_participante]) #tiramos da lista a porta que o participante escolheu
+
+   #o apresentador escolhe entao uma das duas portas restantes que tenha 0
+   print("portas desponiveis", portas)
+   if portas[0] == 0:
+       del (portas[0])
+   else:
+       del (portas[1])
+   #porta que resta para o participante escolher se troca ou nao
+   escolha_alterada = portas[0]
+   print("depois do apresentador",portas)
+
+   #o participante nao troca e ganha
+   if escolha_inicial == 1: mantem +=1
+
+   #o participante troca e ganha
+   if escolha_alterada == 1: troca +=1
+
+   #efetua as proporcoes e add ao fim da lista correspondente
+   lista_i.append(i)
+   lista_mantem.append(mantem/(mantem+troca))
+   lista_troca.append(troca/(mantem+troca))
+
+#montagem do grafico
+line1 = [2/3]*jogadas
+line2 = [1/3]*jogadas
+fig = plt.figure(figsize=(10,5))
+y = plt.plot(lista_mantem, label='Mantem a porta escolhida')
+y = plt.plot(lista_troca, label='Troca a porta escolhida')
+y = plt.plot(line1, ':k')
+y = plt.plot(line2, ':k')
+plt.xlim(0,jogadas)
+plt.xlabel('Número de jogadas')
+plt.ylabel('Proporção acumulada de ganhar')
+plt.legend()
+plt.show()
